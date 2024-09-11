@@ -18,10 +18,8 @@ public class PlayerController : MonoBehaviour
     private float checkRadius = 0.2f;
     private bool canDoubleJump;
     private float lastDashTime;
-    // private float lastTapTimeD;
     private bool isFacingRight = true; // Track the direction the player is facing
     private float threshold = -5f;
-
 
     private void Awake()
     {
@@ -35,31 +33,17 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        HandleMovement();
-        HandleJump();
-        this.animator.SetFloat("yVelocity", this.rb.velocity.y);
-        this.animator.SetFloat("magnitude", this.rb.velocity.magnitude);
-
-        if (!this.wasGrounded && this.isGrounded)
-        {
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpClip);
-        }
-        this.wasGrounded = this.isGrounded;
-
-        if (this.rb.velocity.magnitude > 0.1f && this.isGrounded)
-        {
-            if (!AudioManager.Instance.vfxAudioSrc.isPlaying)
-            {
-                AudioManager.Instance.PlaySFX(AudioManager.Instance.runClip);
-            }
-        }
+        this.HandleMovement();
+        this.HandleWasGrounded();
+        this.HandleJump();
 
         if (this.rb.position.y < this.threshold) SceneManager.LoadScene(0);
     }
 
     private void FixedUpdate()
     {
-
+        this.animator.SetFloat("yVelocity", this.rb.velocity.y);
+        this.animator.SetFloat("magnitude", this.rb.velocity.magnitude);
     }
 
     private void HandleMovement()
@@ -108,7 +92,6 @@ public class PlayerController : MonoBehaviour
                 Flip();
             }
         }
-        // Debug.Log(speed);
 
         // Increase speed if Left Shift is held
         // if (Input.GetKey(KeyCode.LeftShift))
@@ -119,6 +102,13 @@ public class PlayerController : MonoBehaviour
         // Apply movement
         this.rb.velocity = new Vector2(moveInput * speed, this.rb.velocity.y);
 
+        if (this.rb.velocity.magnitude > 0.01f && this.isGrounded)
+        {
+            if (!AudioManager.Instance.vfxAudioSrc.isPlaying)
+            {
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.runClip);
+            }
+        }
     }
 
     private void Flip()
@@ -153,10 +143,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void HandleWasGrounded() {
+        if (!this.wasGrounded && this.isGrounded)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpClip);
+        }
+        this.wasGrounded = this.isGrounded;
+    }
+
     private void Jump()
     {
-        this.animator.SetTrigger("Jump");
         this.rb.velocity = new Vector2(this.rb.velocity.x, 0f); // Reset vertical velocity to ensure consistent jump height
         this.rb.AddForce(Vector2.up * this.jumpForce, ForceMode2D.Impulse);
+        this.animator.SetTrigger("Jump");
     }
 }
