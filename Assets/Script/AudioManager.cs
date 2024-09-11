@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    public static AudioManager Instance { get; private set; }
     public AudioSource musicAudioSrc;
     public AudioSource vfxAudioSrc;
     public AudioClip musicClip;
@@ -9,13 +10,20 @@ public class AudioManager : MonoBehaviour
     public AudioClip jumpClip;
     public AudioClip runClip;
 
-    public void Start() {
-        musicAudioSrc.clip = musicClip;
-        musicAudioSrc.Play();
+    private void Awake()
+    {
+        Instance = this;
     }
 
-    public void PlaySFX(AudioClip vfxClip) {
-        vfxAudioSrc.clip = vfxClip;
-        vfxAudioSrc.PlayOneShot(vfxClip);
+    private void Start()
+    {
+        this.musicAudioSrc.clip = musicClip;
+        this.musicAudioSrc.Play();
+    }
+
+    public void PlaySFX(AudioClip vfxClip)
+    {
+        this.vfxAudioSrc.clip = vfxClip;
+        this.vfxAudioSrc.PlayOneShot(vfxClip);
     }
 }

@@ -21,12 +21,11 @@ public class PlayerController : MonoBehaviour
     // private float lastTapTimeD;
     private bool isFacingRight = true; // Track the direction the player is facing
     private float threshold = -5f;
-    private AudioManager audioManager;
 
 
     private void Awake()
     {
-        this.audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        // this.audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     private void Start()
@@ -38,20 +37,20 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         HandleJump();
-        this.animator.SetFloat("yVelocity", rb.velocity.y);
-        this.animator.SetFloat("magnitude", rb.velocity.magnitude);
+        this.animator.SetFloat("yVelocity", this.rb.velocity.y);
+        this.animator.SetFloat("magnitude", this.rb.velocity.magnitude);
 
         if (!this.wasGrounded && this.isGrounded)
         {
-            this.audioManager.PlaySFX(this.audioManager.jumpClip);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpClip);
         }
-        this.wasGrounded = isGrounded;
+        this.wasGrounded = this.isGrounded;
 
         if (this.rb.velocity.magnitude > 0.1f && this.isGrounded)
         {
-            if (!this.audioManager.vfxAudioSrc.isPlaying)
+            if (!AudioManager.Instance.vfxAudioSrc.isPlaying)
             {
-                this.audioManager.PlaySFX(this.audioManager.runClip);
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.runClip);
             }
         }
 
@@ -118,7 +117,7 @@ public class PlayerController : MonoBehaviour
         // }
 
         // Apply movement
-        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+        this.rb.velocity = new Vector2(moveInput * speed, this.rb.velocity.y);
 
     }
 
@@ -133,23 +132,23 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJump()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
-        if (isGrounded)
+        this.isGrounded = Physics2D.OverlapCircle(this.groundCheck.position, this.checkRadius, whatIsGround);
+        if (this.isGrounded)
         {
-            canDoubleJump = true;
+            this.canDoubleJump = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGrounded)
+            if (this.isGrounded)
             {
                 Jump();
-                this.audioManager.PlaySFX(this.audioManager.jumpClip);
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpClip);
             }
-            else if (canDoubleJump)
+            else if (this.canDoubleJump)
             {
                 Jump();
-                canDoubleJump = false;
+                this.canDoubleJump = false;
             }
         }
     }
@@ -157,8 +156,7 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         this.animator.SetTrigger("Jump");
-        rb.velocity = new Vector2(rb.velocity.x, 0f); // Reset vertical velocity to ensure consistent jump height
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
+        this.rb.velocity = new Vector2(this.rb.velocity.x, 0f); // Reset vertical velocity to ensure consistent jump height
+        this.rb.AddForce(Vector2.up * this.jumpForce, ForceMode2D.Impulse);
     }
 }

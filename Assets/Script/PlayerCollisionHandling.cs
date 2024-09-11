@@ -5,13 +5,11 @@ public class PlayerCollisionHandling : MonoBehaviour
 {
     public int score = 0;
     public TextMeshProUGUI scoreUI;
-    private AudioManager audioManager;
-
     public Animator animator;
 
     private void Awake()
     {
-        this.audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        // this.audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     private void Start()
@@ -27,7 +25,7 @@ public class PlayerCollisionHandling : MonoBehaviour
             // Tăng điểm
             this.score += 1;
             this.scoreUI.SetText(this.score.ToString());
-            this.audioManager.PlaySFX(audioManager.eatClip);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.eatClip);
             this.animator.SetTrigger("Eat");
             // Xóa táo khỏi cảnh
             Destroy(collider.gameObject);
