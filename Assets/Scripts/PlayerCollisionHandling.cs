@@ -19,15 +19,16 @@ public class PlayerCollisionHandling : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        // Kiểm tra nếu đối tượng va chạm là táo
+
         if (collider.CompareTag("Apple"))
         {
-            // Tăng điểm
+
             this.score += 1;
             this.scoreUI.SetText(this.score.ToString());
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.eatClip);
+
             this.animator.SetTrigger("Eat");
-            // Xóa táo khỏi cảnh
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.eatClip);
+ 
             Destroy(collider.gameObject);
         }
     }

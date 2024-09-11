@@ -14,11 +14,11 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private bool isGrounded;
-    private bool wasGrounded = false;
+    private bool wasGrounded = false; // flag for landing audio playback trigger
     private float checkRadius = 0.2f;
     private bool canDoubleJump;
     private float lastDashTime;
-    private bool isFacingRight = true; // Track the direction the player is facing
+    private bool isFacingRight = true;
     private float threshold = -5f;
 
     private void Awake()
@@ -38,12 +38,16 @@ public class PlayerController : MonoBehaviour
         this.HandleJump();
 
         if (this.rb.position.y < this.threshold) SceneManager.LoadScene(0);
+
+        // Update animator parameters in Update for smoother animations
+        animator.SetFloat("yVelocity", rb.velocity.y);
+        animator.SetFloat("magnitude", rb.velocity.magnitude);
     }
 
     private void FixedUpdate()
     {
-        this.animator.SetFloat("yVelocity", this.rb.velocity.y);
-        this.animator.SetFloat("magnitude", this.rb.velocity.magnitude);
+        // this.animator.SetFloat("yVelocity", this.rb.velocity.y);
+        // this.animator.SetFloat("magnitude", this.rb.velocity.magnitude);
     }
 
     private void HandleMovement()

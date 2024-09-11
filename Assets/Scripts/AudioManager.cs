@@ -23,7 +23,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(AudioClip vfxClip)
     {
-        this.vfxAudioSrc.clip = vfxClip;
+        // this.vfxAudioSrc.clip = vfxClip;
         this.vfxAudioSrc.PlayOneShot(vfxClip);
     }
 }
