@@ -3,9 +3,9 @@ using TMPro;
 
 public class PlayerCollisionHandling : MonoBehaviour
 {
-    public int score = 0;
     public TextMeshProUGUI scoreUI;
     public Animator animator;
+    private int score = 0;
 
     private void Awake()
     {

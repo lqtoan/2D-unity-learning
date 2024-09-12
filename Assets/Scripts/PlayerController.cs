@@ -11,14 +11,15 @@ public class PlayerController : MonoBehaviour
     public LayerMask whatIsGround;
     public Animator animator;
 
-
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
+    public bool isFacingRight = true;
+    
     private bool isGrounded;
     private bool wasGrounded = false; // flag for landing audio playback trigger
     private float checkRadius = 0.2f;
     private bool canDoubleJump;
     private float lastDashTime;
-    private bool isFacingRight = true;
+
     private float threshold = -5f;
 
     private void Awake()
@@ -37,7 +38,7 @@ public class PlayerController : MonoBehaviour
         this.HandleWasGrounded();
         this.HandleJump();
 
-        if (this.rb.position.y < this.threshold) SceneManager.LoadScene(0);
+        if (this.rb.position.y < this.threshold) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
         // Update animator parameters in Update for smoother animations
         animator.SetFloat("yVelocity", rb.velocity.y);
