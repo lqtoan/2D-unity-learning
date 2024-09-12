@@ -3,8 +3,8 @@ using UnityEngine;
 public class CastAttack : MonoBehaviour
 {
     public PlayerController playerController;
-    public GameObject spellPrefab; 
-    public Transform castPoint; 
+    public GameObject spellPrefab;
+    public Transform castPoint;
     public float castCooldown = 0.5f;
 
     private float lastCastTime;
@@ -19,6 +19,7 @@ public class CastAttack : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && Time.time >= this.lastCastTime + this.castCooldown)
         {
             this.playerController.animator.SetTrigger("Cast");
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.castClip);
             this.CastSpell();
         }
     }

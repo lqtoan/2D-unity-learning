@@ -11,8 +11,8 @@ public class PlayerController : MonoBehaviour
     public LayerMask whatIsGround;
     public Animator animator;
 
-    public Rigidbody2D rb;
     public bool isFacingRight = true;
+    private Rigidbody2D rb;
     
     private bool isGrounded;
     private bool wasGrounded = false; // flag for landing audio playback trigger

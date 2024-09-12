@@ -22,7 +22,6 @@ public class PlayerCollisionHandling : MonoBehaviour
 
         if (collider.CompareTag("Apple"))
         {
-
             this.score += 1;
             this.scoreUI.SetText(this.score.ToString());
 

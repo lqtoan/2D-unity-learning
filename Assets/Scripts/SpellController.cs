@@ -5,7 +5,7 @@ public class SpellController : MonoBehaviour
 {
     [SerializeField] float speed = 10f;
     [SerializeField] float lifeTime = 5f;
-    [SerializeField] int damage = 20;
+
     // public GameObject impactEffect; 
 
     private Rigidbody2D rb;
@@ -22,7 +22,7 @@ public class SpellController : MonoBehaviour
         if(this.playerController.isFacingRight) {
             this.rb.velocity = transform.right * this.speed;
         } else {
-            this.rb.velocity = - transform.right * this.speed;
+            this.rb.velocity = -1 * transform.right * this.speed;
         }
         StartCoroutine(DestroyAfterLifetime());
     }

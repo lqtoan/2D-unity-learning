@@ -21,19 +21,20 @@ public class MeleeAttack : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if (Time.time - lastComboTime < comboDelay)
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.swordClip);
+            if (Time.time - this.lastComboTime < this.comboDelay)
             {
-                comboStep++;
-                if (comboStep > 3) comboStep = 3;
+                this.comboStep++;
+                if (this.comboStep > 3) this.comboStep = 3;
             }
             else
             {
-                comboStep = 1;
+                this.comboStep = 1;
             }
 
-            lastComboTime = Time.time;
+            this.lastComboTime = Time.time;
 
-            switch (comboStep)
+            switch (this.comboStep)
             {
                 case 1:
                     this.playerController.animator.SetTrigger("Attack1");
@@ -48,9 +49,9 @@ public class MeleeAttack : MonoBehaviour
             }
         }
         
-        if (Time.time - lastComboTime > comboDelay && comboStep > 0)
+        if (Time.time - this.lastComboTime > this.comboDelay && this.comboStep > 0)
         {
-            comboStep = 0;
+            this.comboStep = 0;
         }
     }
 }
