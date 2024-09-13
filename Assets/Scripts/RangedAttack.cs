@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class RangedAttack : MonoBehaviour
 {
-    public PlayerController playerController;
+    private PlayerController playerController;
     public GameObject bulletPrefab;
-    public Transform shootPoint;
-    public float shootCooldown = 0.5f;
+    public Transform firePoint;
 
-    private float delayBeforeFire = 0.5f; // Thời gian delay trước khi bắn viên đạn
-    private float lastShootTime;
+    [SerializeField] float fireRate = 1f;
+    private float delayBeforeFire = 0.5f;
+    private float lastFireTime;
 
     private void Awake()
     {
@@ -18,19 +18,19 @@ public class RangedAttack : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && Time.time >= this.lastShootTime + this.shootCooldown)
+        if (Input.GetKeyDown(KeyCode.E) && Time.time >= this.lastFireTime + this.fireRate)
         {
             this.playerController.animator.SetTrigger("RangedAttack");
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.castClip);
-
-            StartCoroutine(this.Shoot());
+            StartCoroutine(this.Fire());
         }
     }
 
-    private IEnumerator Shoot()
+    private IEnumerator Fire()
     {
+        this.lastFireTime = Time.time;
         yield return new WaitForSeconds(delayBeforeFire);
-        Instantiate(this.bulletPrefab, this.shootPoint.position, this.shootPoint.rotation);
-        this.lastShootTime = Time.time;
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.bowClip);
+
+        Instantiate(this.bulletPrefab, this.firePoint.position, this.firePoint.rotation);
     }
 }

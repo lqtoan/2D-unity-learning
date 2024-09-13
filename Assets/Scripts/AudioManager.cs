@@ -10,7 +10,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip jumpClip;
     public AudioClip runClip;
     public AudioClip swordClip;
-    public AudioClip castClip;
+    public AudioClip bowClip;
 
     private void Awake()
     {

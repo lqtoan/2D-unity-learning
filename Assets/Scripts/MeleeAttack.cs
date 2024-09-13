@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MeleeAttack : MonoBehaviour
 {
-    public PlayerController playerController;
+    private PlayerController playerController;
     private float comboDelay = 0.3f;
     private int comboStep = 0;
     private float lastComboTime = 0f;
