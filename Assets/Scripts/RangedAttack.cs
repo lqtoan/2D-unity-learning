@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class RangedAttack : MonoBehaviour
 {
-    private PlayerController playerController;
     public GameObject bulletPrefab;
     public Transform firePoint;
 
     [SerializeField] float fireRate = 1f;
+    private PlayerController playerController;
     private float delayBeforeFire = 0.5f;
     private float lastFireTime;
 

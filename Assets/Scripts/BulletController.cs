@@ -4,7 +4,7 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     [SerializeField] float speed = 100f;
-    [SerializeField] float lifeTime = 5f;
+    private float lifeTime = 5f;
     private Rigidbody2D rb;
     private PlayerController playerController;
 
