@@ -3,29 +3,29 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float moveSpeed = 5f;
+    public float doubleTapTime = 0.3f;
+    public float dashBoost = 100f;
+
+    [Header("Jump Settings")]
     public float jumpForce = 7f;
-    public float doubleTapTime = 0.3f; // Time window for double-tap
-    public float dashBoost = 100f; // Multiplier for speed boost
     public Transform groundCheck;
     public LayerMask whatIsGround;
+    public float checkRadius = 0.2f;
+    public float gravityScaleOnFall = 1.5f;
+    public float fallThreshold = -10f;
+
+    [Header("Animation")]
     public Animator animator;
 
-    public bool isFacingRight = true;
+    public bool isFacingRight { get; private set; } = true;
+
     private Rigidbody2D rb;
-    
-    private bool isGrounded;
-    private bool wasGrounded = false; // flag for landing audio playback trigger
-    private float checkRadius = 0.2f;
-    private bool canDoubleJump;
     private float lastDashTime;
-
-    private float threshold = 10f;
-
-    private void Awake()
-    {
-        // this.audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
-    }
+    private bool isGrounded;
+    private bool canDoubleJump;
+    private bool wasGrounded = true;
 
     private void Start()
     {
@@ -34,132 +34,103 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        this.HandleMovement();
-        this.HandleWasGrounded();
-        this.HandleJump();
-
-        if (this.rb.position.y < this.threshold) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
-        // Update animator parameters in Update for smoother animations
-        animator.SetFloat("yVelocity", rb.velocity.y);
-        animator.SetFloat("magnitude", rb.velocity.magnitude);
-    }
-
-    private void FixedUpdate()
-    {
-        // this.animator.SetFloat("yVelocity", this.rb.velocity.y);
-        // this.animator.SetFloat("magnitude", this.rb.velocity.magnitude);
+        HandleMovement();
+        HandleJump();
+        HandleFall();
+        UpdateAnimator();
+        CheckForGroundedAudio();
     }
 
     private void HandleMovement()
     {
-        float speed = this.moveSpeed;
-        float moveInput = 0f;
+        float moveInput = Input.GetAxisRaw("Horizontal");
+        float speed = moveSpeed;
 
-        // Handle movement and double-tap for A key
-        if (Input.GetKey(KeyCode.A))
+        if (moveInput != 0)
         {
-            moveInput = -1f; // Move left
-
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Time.time - lastDashTime < doubleTapTime)
             {
-                if (Time.time - this.lastDashTime < this.doubleTapTime)
-                {
-                    speed *= this.dashBoost; // Speed boost
-                }
-                this.lastDashTime = Time.time;
+                speed *= dashBoost;
             }
+            lastDashTime = Time.time;
 
-            // Flip the player to face left if necessary
-            if (this.isFacingRight)
+            if (moveInput > 0 && !isFacingRight || moveInput < 0 && isFacingRight)
             {
                 Flip();
             }
         }
 
-        // Handle movement and double-tap for D key
-        if (Input.GetKey(KeyCode.D))
+        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+
+        if (rb.velocity.magnitude > 0.01f && isGrounded)
         {
-            moveInput = 1f; // Move right
-
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                if (Time.time - this.lastDashTime < this.doubleTapTime)
-                {
-                    speed *= this.dashBoost; // Speed boost
-                }
-                this.lastDashTime = Time.time;
-            }
-
-            // Flip the player to face right if necessary
-            if (!this.isFacingRight)
-            {
-                Flip();
-            }
-        }
-
-        // Increase speed if Left Shift is held
-        // if (Input.GetKey(KeyCode.LeftShift))
-        // {
-        //     speed += dashBoost;
-        // }
-
-        // Apply movement
-        this.rb.velocity = new Vector2(moveInput * speed, this.rb.velocity.y);
-
-        if (this.rb.velocity.magnitude > 0.01f && this.isGrounded)
-        {
-            if (!AudioManager.Instance.vfxAudioSrc.isPlaying)
-            {
-                AudioManager.Instance.PlaySFX(AudioManager.Instance.runClip);
-            }
+            PlayRunningSound();
         }
     }
 
     private void Flip()
     {
-        // Switch the way the player is facing
-        this.isFacingRight = !this.isFacingRight;
-        Vector3 scaler = transform.localScale;
-        scaler.x *= -1;
-        transform.localScale = scaler;
+        isFacingRight = !isFacingRight;
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
     private void HandleJump()
     {
-        this.isGrounded = Physics2D.OverlapCircle(this.groundCheck.position, this.checkRadius, whatIsGround);
-        if (this.isGrounded)
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+
+        if (isGrounded)
         {
-            this.canDoubleJump = true;
+            canDoubleJump = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (this.isGrounded)
+            if (isGrounded || canDoubleJump)
             {
                 Jump();
-                AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpClip);
-            }
-            else if (this.canDoubleJump)
-            {
-                Jump();
-                this.canDoubleJump = false;
+                if (!isGrounded) canDoubleJump = false;
             }
         }
-    }
-
-    private void HandleWasGrounded() {
-        if (!this.wasGrounded && this.isGrounded)
-        {
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpClip);
-        }
-        this.wasGrounded = this.isGrounded;
     }
 
     private void Jump()
     {
-        this.rb.velocity = new Vector2(this.rb.velocity.x, 0f); // Reset vertical velocity to ensure consistent jump height
-        this.rb.AddForce(Vector2.up * this.jumpForce, ForceMode2D.Impulse);
-        this.animator.SetTrigger("Jump");
+        rb.velocity = new Vector2(rb.velocity.x, 0f); // Reset vertical velocity for consistent jump height
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        animator.SetTrigger("Jump");
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpClip);
+    }
+
+    private void HandleFall()
+    {
+        rb.gravityScale = rb.velocity.y < 0 ? gravityScaleOnFall : 1f;
+
+        if (rb.position.y < fallThreshold)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
+    private void UpdateAnimator()
+    {
+        animator.SetFloat("yVelocity", rb.velocity.y);
+        animator.SetFloat("magnitude", rb.velocity.magnitude);
+    }
+
+    private void CheckForGroundedAudio()
+    {
+        if (!wasGrounded && isGrounded)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpClip);
+        }
+        wasGrounded = isGrounded;
+    }
+
+    private void PlayRunningSound()
+    {
+        if (!AudioManager.Instance.vfxAudioSrc.isPlaying)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.runClip);
+        }
     }
 }

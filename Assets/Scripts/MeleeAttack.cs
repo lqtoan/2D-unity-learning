@@ -2,56 +2,83 @@ using UnityEngine;
 
 public class MeleeAttack : MonoBehaviour
 {
+    [Header("Combo Settings")]
+    [SerializeField] private float comboDelay = 0.3f;
+    [SerializeField] private int maxComboStep = 3;
+
     private PlayerController playerController;
-    private float comboDelay = 0.3f;
     private int comboStep = 0;
     private float lastComboTime = 0f;
 
     private void Awake()
     {
-        this.playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     private void Update()
     {
-        this.HandleCombo();
+        HandleCombo();
     }
 
-    void HandleCombo()
+    private void HandleCombo()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            PlayAttackSound();
+            UpdateComboStep();
+            TriggerComboAnimation();
+        }
+
+        ResetComboIfNeeded();
+    }
+
+    private void PlayAttackSound()
+    {
+        if (AudioManager.Instance != null)
+        {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.swordClip);
-            if (Time.time - this.lastComboTime < this.comboDelay)
-            {
-                this.comboStep++;
-                if (this.comboStep > 3) this.comboStep = 3;
-            }
-            else
-            {
-                this.comboStep = 1;
-            }
+        }
+    }
 
-            this.lastComboTime = Time.time;
+    private void UpdateComboStep()
+    {
+        if (Time.time - lastComboTime < comboDelay)
+        {
+            comboStep = Mathf.Min(comboStep + 1, maxComboStep);
+        }
+        else
+        {
+            comboStep = 1;
+        }
 
-            switch (this.comboStep)
+        lastComboTime = Time.time;
+    }
+
+    private void TriggerComboAnimation()
+    {
+        if (playerController != null && playerController.animator != null)
+        {
+            switch (comboStep)
             {
                 case 1:
-                    this.playerController.animator.SetTrigger("Attack1");
+                    playerController.animator.SetTrigger("Attack1");
                     break;
                 case 2:
-                    this.playerController.animator.SetTrigger("Attack2");
+                    playerController.animator.SetTrigger("Attack2");
                     break;
                 case 3:
-                    this.playerController.animator.SetTrigger("Attack3");
-                    this.comboStep = 0;
+                    playerController.animator.SetTrigger("Attack3");
+                    comboStep = 0; // Optionally reset combo after the third attack
                     break;
             }
         }
-        
-        if (Time.time - this.lastComboTime > this.comboDelay && this.comboStep > 0)
+    }
+
+    private void ResetComboIfNeeded()
+    {
+        if (Time.time - lastComboTime > comboDelay && comboStep > 0)
         {
-            this.comboStep = 0;
+            comboStep = 0;
         }
     }
 }

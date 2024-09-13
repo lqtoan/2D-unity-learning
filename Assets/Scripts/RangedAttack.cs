@@ -3,34 +3,69 @@ using UnityEngine;
 
 public class RangedAttack : MonoBehaviour
 {
-    public GameObject bulletPrefab;
-    public Transform firePoint;
+    [Header("Attack Settings")]
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private float fireRate = 1f;
+    [SerializeField] private float delayBeforeFire = 0.5f;
 
-    [SerializeField] float fireRate = 1f;
     private PlayerController playerController;
-    private float delayBeforeFire = 0.5f;
     private float lastFireTime;
 
     private void Awake()
     {
-        this.playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && Time.time >= this.lastFireTime + this.fireRate)
+        if (Input.GetKeyDown(KeyCode.E) && CanFire())
         {
-            this.playerController.animator.SetTrigger("RangedAttack");
-            StartCoroutine(this.Fire());
+            PerformRangedAttack();
         }
     }
 
-    private IEnumerator Fire()
+    private bool CanFire()
     {
-        this.lastFireTime = Time.time;
-        yield return new WaitForSeconds(delayBeforeFire);
-        AudioManager.Instance.PlaySFX(AudioManager.Instance.bowClip);
+        return Time.time >= lastFireTime + fireRate;
+    }
 
-        Instantiate(this.bulletPrefab, this.firePoint.position, this.firePoint.rotation);
+    private void PerformRangedAttack()
+    {
+        playerController.animator.SetTrigger("RangedAttack");
+        StartCoroutine(FireCoroutine());
+    }
+
+    private IEnumerator FireCoroutine()
+    {
+        lastFireTime = Time.time;
+        yield return new WaitForSeconds(delayBeforeFire);
+        
+        PlayFireSound();
+        SpawnBullet();
+    }
+
+    private void PlayFireSound()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.bowClip);
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager.Instance is null.");
+        }
+    }
+
+    private void SpawnBullet()
+    {
+        if (bulletPrefab != null && firePoint != null)
+        {
+            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        }
+        else
+        {
+            Debug.LogWarning("Bullet Prefab or Fire Point is not assigned.");
+        }
     }
 }

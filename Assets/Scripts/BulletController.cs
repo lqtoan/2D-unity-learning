@@ -3,51 +3,43 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    [SerializeField] float speed = 50f;
-    private float lifeTime = 5f;
+    [Header("Bullet Settings")]
+    [SerializeField] private float speed = 50f;
+    [SerializeField] private float lifeTime = 5f;
+
     private Rigidbody2D rb;
-    private PlayerController playerController;
     private bool isFacingRight;
 
     private void Awake()
     {
-        this.playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-
-    }
-
-    private void Update()
-    {
+        PlayerController playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        isFacingRight = playerController.isFacingRight;
     }
 
     private void Start()
     {
-        this.rb = GetComponent<Rigidbody2D>();
-        this.isFacingRight = playerController.isFacingRight;
-
-        this.Fire();
+        rb = GetComponent<Rigidbody2D>();
+        Fire();
         StartCoroutine(DestroyAfterLifetime());
     }
 
     private void Fire()
     {
-        this.rb.velocity = (this.isFacingRight ? 1 : -1) * transform.right * this.speed;
-        transform.localScale = new Vector3((this.isFacingRight ? 1 : -1) * transform.localScale.x, transform.localScale.y, transform.localScale.z);
+        float direction = isFacingRight ? 1f : -1f;
+        rb.velocity = direction * transform.right * speed;
+        transform.localScale = new Vector3(direction * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
     }
 
     private IEnumerator DestroyAfterLifetime()
     {
         yield return new WaitForSeconds(lifeTime);
-        if (this != null)
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.CompareTag("Ground"))
+        if (collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            Debug.Log("cham");
             Destroy(gameObject); 
         }
     }
