@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private bool canDoubleJump;
     private float lastDashTime;
 
-    private float threshold = -5f;
+    private float threshold = 10f;
 
     private void Awake()
     {
