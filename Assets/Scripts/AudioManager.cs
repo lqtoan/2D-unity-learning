@@ -26,7 +26,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        this.musicAudioSrc.clip = musicClip;
+        this.musicAudioSrc.clip = this.musicClip;
         this.musicAudioSrc.Play();
     }
 

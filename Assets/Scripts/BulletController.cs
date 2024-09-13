@@ -3,19 +3,26 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    [SerializeField] float speed = 100f;
+    [SerializeField] float speed = 50f;
     private float lifeTime = 5f;
     private Rigidbody2D rb;
     private PlayerController playerController;
+    private bool isFacingRight;
 
     private void Awake()
     {
         this.playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+    }
+
+    private void Update()
+    {
     }
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        this.rb = GetComponent<Rigidbody2D>();
+        this.isFacingRight = playerController.isFacingRight;
 
         this.Fire();
         StartCoroutine(DestroyAfterLifetime());
@@ -23,11 +30,8 @@ public class BulletController : MonoBehaviour
 
     private void Fire()
     {
-        if (this.playerController.isFacingRight) {
-            this.rb.velocity = transform.right * this.speed;
-        } else {
-            this.rb.velocity = -transform.right * this.speed;
-        }
+        this.rb.velocity = (this.isFacingRight ? 1 : -1) * transform.right * this.speed;
+        transform.localScale = new Vector3((this.isFacingRight ? 1 : -1) * transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
     private IEnumerator DestroyAfterLifetime()
@@ -36,6 +40,15 @@ public class BulletController : MonoBehaviour
         if (this != null)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.CompareTag("Ground"))
+        {
+            Debug.Log("cham");
+            Destroy(gameObject); 
         }
     }
 }
