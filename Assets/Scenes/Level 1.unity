@@ -1258,7 +1258,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -60.9119, y: 21.699589, z: -10}
+  m_LocalPosition: {x: -43.156605, y: 21.69962, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1818,7 +1818,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -2257,7 +2257,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2204921476029467503, guid: a754cbc5760284fc79dbb4de27bdeed9, type: 3}
   firePoint: {fileID: 512862218}
   fireRate: 1
-  delayBeforeFire: 0.5
 --- !u!1 &920886331
 GameObject:
   m_ObjectHideFlags: 0
