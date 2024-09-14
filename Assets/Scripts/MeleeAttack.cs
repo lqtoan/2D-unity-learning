@@ -12,12 +12,7 @@ public class MeleeAttack : MonoBehaviour
 
     private void Awake()
     {
-        playerController = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerController>();
-        
-        if (playerController == null)
-        {
-            Debug.LogError("PlayerController not found on the Player object. Please ensure the Player object is tagged correctly and has a PlayerController component.");
-        }
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     private void Update()
@@ -39,12 +34,15 @@ public class MeleeAttack : MonoBehaviour
 
     private void PlayAttackSound()
     {
-        AudioManager.Instance?.PlaySFX(AudioManager.Instance.swordClip);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.swordClip);
+        }
     }
 
     private void UpdateComboStep()
     {
-        if (Time.time >= lastComboTime + comboDelay)
+        if (Time.time  < lastComboTime + comboDelay)
         {
             comboStep = Mathf.Min(comboStep + 1, maxComboStep);
         }
@@ -78,7 +76,7 @@ public class MeleeAttack : MonoBehaviour
 
     private void ResetComboIfNeeded()
     {
-        if (Time.time >= lastComboTime + comboDelay && comboStep > 0)
+        if (Time.time - lastComboTime > comboDelay && comboStep > 0)
         {
             comboStep = 0;
         }
