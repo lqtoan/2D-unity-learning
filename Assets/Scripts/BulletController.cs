@@ -38,7 +38,7 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if (collider.gameObject.layer == LayerMask.NameToLayer("Ground") || collider.CompareTag("Ground"))
         {
             Destroy(gameObject); 
         }

@@ -55,8 +55,6 @@ public class PlayerController : MonoBehaviour
         CheckForGroundedAudio();
         RegenerateStamina(); // Regenerate stamina when not boosting
         UpdateStaminaUI();
-
-        Debug.Log(currentStamina);
     }
 
     private void HandleMovement()
