@@ -18,10 +18,10 @@ public class PlayerCollisionHandling : MonoBehaviour
     {
         this.scoreUI.SetText(this.score.ToString());
     }
-    private void OnTriggerEnter2D(Collider2D collider)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
 
-        if (collider.CompareTag("Apple"))
+        if (collision.CompareTag("Apple"))
         {
             this.score += 1;
             this.scoreUI.SetText(this.score.ToString());
@@ -29,7 +29,7 @@ public class PlayerCollisionHandling : MonoBehaviour
             this.animator.SetTrigger("Eat");
             AudioManager.Instance.PlaySFX(AudioManager.Instance.eatClip);
  
-            Destroy(collider.gameObject);
+            Destroy(collision.gameObject);
         }
     }
 }

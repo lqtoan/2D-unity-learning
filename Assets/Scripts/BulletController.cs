@@ -27,7 +27,7 @@ public class BulletController : MonoBehaviour
     {
         float direction = isFacingRight ? 1f : -1f;
         rb.velocity = direction * transform.right * speed;
-        transform.localScale = new Vector3(direction * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        transform.localScale = new Vector2(direction * Mathf.Abs(transform.localScale.x), transform.localScale.y);
     }
 
     private IEnumerator DestroyAfterLifetime()
