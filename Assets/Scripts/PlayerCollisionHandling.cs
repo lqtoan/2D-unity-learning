@@ -6,6 +6,7 @@ public class PlayerCollisionHandling : MonoBehaviour
     public TextMeshProUGUI scoreUI;
     public Animator animator;
     private int score = 0;
+    [SerializeField] private float hp = 3;
 
     private void Awake()
     {

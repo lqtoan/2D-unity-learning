@@ -1,28 +1,41 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float moveSpeed = 5f;
-    public float doubleTapTime = 0.3f;
-    public float dashBoost = 100f;
-
-    [Header("Jump Settings")]
-    public float jumpForce = 7f;
-    public Transform groundCheck;
-    public LayerMask whatIsGround;
-    public float checkRadius = 0.2f;
-    public float gravityScaleOnFall = 1.5f;
-    public float fallThreshold = -10f;
-
+    #region Animation
     [Header("Animation")]
     public Animator animator;
+    #endregion
 
     public bool isFacingRight { get; private set; } = true;
+    public Slider staminaSlider; // Reference to the UI slider
+
+    #region Movement Settings
+    [Header("Movement Settings")]
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float dashBoost = 4f;
+    #endregion
+
+    [Header("Stamina Settings")]
+    [SerializeField] private float maxStamina = 20f;
+    [SerializeField] private float staminaRegenRate = 1f;  // Stamina regenerated per second
+    [SerializeField] private float staminaConsumptionRate = 5f; // Stamina consumed per second while boosting
+    [SerializeField] private float minStaminaForBoost = 0.1f; // Minimum stamina required to start boosting
+
+    #region Jump Settings
+    [Header("Jump Settings")]
+    [SerializeField] private float jumpForce = 7f;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private float checkRadius = 0.2f;
+    [SerializeField] private float gravityScaleOnFall = 1.5f;
+    [SerializeField] private float fallThreshold = -5f;
+    #endregion
 
     private Rigidbody2D rb;
-    private float lastDashTime;
+    private float currentStamina;
     private bool isGrounded;
     private bool canDoubleJump;
     private bool wasGrounded = true;
@@ -30,6 +43,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        currentStamina = maxStamina; // Initialize stamina
     }
 
     private void Update()
@@ -39,6 +53,10 @@ public class PlayerController : MonoBehaviour
         HandleFall();
         UpdateAnimator();
         CheckForGroundedAudio();
+        RegenerateStamina(); // Regenerate stamina when not boosting
+        UpdateStaminaUI();
+
+        Debug.Log(currentStamina);
     }
 
     private void HandleMovement()
@@ -48,20 +66,24 @@ public class PlayerController : MonoBehaviour
 
         if (moveInput != 0)
         {
-            if (Time.time - lastDashTime < doubleTapTime)
+            // Check if the player is holding down Left Shift to run
+            if (Input.GetKey(KeyCode.LeftShift) && currentStamina > minStaminaForBoost)
             {
-                speed *= dashBoost;
+                speed *= dashBoost; // Increase speed to run
+                UseStamina();
             }
-            lastDashTime = Time.time;
 
+            // Flip the character based on direction
             if (moveInput > 0 && !isFacingRight || moveInput < 0 && isFacingRight)
             {
                 Flip();
             }
         }
 
+        // Apply velocity based on movement input and speed
         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
 
+        // Play running sound if moving and grounded
         if (rb.velocity.magnitude > 0.01f && isGrounded)
         {
             PlayRunningSound();
@@ -72,6 +94,22 @@ public class PlayerController : MonoBehaviour
     {
         isFacingRight = !isFacingRight;
         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+    }
+
+    private void UseStamina()
+    {
+        currentStamina -= staminaConsumptionRate * Time.deltaTime;
+        currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina); // Clamp stamina between 0 and max
+    }
+
+    private void RegenerateStamina()
+    {
+        // Regenerate stamina only if not boosting
+        if (!Input.GetKey(KeyCode.LeftShift) || rb.velocity.magnitude == 0)
+        {
+            currentStamina += staminaRegenRate * Time.deltaTime;
+            currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina); // Clamp stamina between 0 and max
+        }
     }
 
     private void HandleJump()
@@ -132,5 +170,10 @@ public class PlayerController : MonoBehaviour
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.runClip);
         }
+    }
+
+        private void UpdateStaminaUI()
+    {
+        staminaSlider.value = currentStamina / maxStamina; // Update the slider value based on stamina
     }
 }
