@@ -20,8 +20,6 @@ public class EnemySpawner : MonoBehaviour
             SpawnEnemy();
             timeSinceLastSpawn = 0f;
         }
-
-        Debug.Log(currentEnemyCount);
     }
 
     public void DecreaseEnemyCount()

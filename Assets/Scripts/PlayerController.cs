@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     public bool isFacingRight { get; private set; } = true;
-    public Slider staminaSlider; // Reference to the UI slider
+    [SerializeField] private Slider staminaSlider; // Reference to the UI slider
 
     #region Movement Settings
     [Header("Movement Settings")]
