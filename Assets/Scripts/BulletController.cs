@@ -4,11 +4,12 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     [Header("Bullet Settings")]
-    [SerializeField] private float speed = 50f;
+    public float speed = 50f;
     [SerializeField] private float lifeTime = 5f;
 
     private Rigidbody2D rb;
     private bool isFacingRight;
+    private ObjectPool objectPool;
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class BulletController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         Fire();
         StartCoroutine(DestroyAfterLifetime());
+        objectPool = FindObjectOfType<ObjectPool>();
     }
 
     private void Fire()
@@ -33,14 +35,16 @@ public class BulletController : MonoBehaviour
     private IEnumerator DestroyAfterLifetime()
     {
         yield return new WaitForSeconds(lifeTime);
-        Destroy(gameObject);
+        // Destroy(gameObject);
+        objectPool.ReturnObject(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Ground") || collider.CompareTag("Ground"))
         {
-            Destroy(gameObject); 
+            // Destroy(gameObject); 
+            objectPool.ReturnObject(gameObject);
         }
     }
 }

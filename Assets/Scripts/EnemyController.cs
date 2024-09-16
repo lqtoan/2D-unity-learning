@@ -93,8 +93,8 @@ public class EnemyController : MonoBehaviour
 
             healthBar.SetHealth(currentHealth, maxHealth);  // Cập nhật thanh máu
             StartCoroutine(FlashDamageEffect());  // Gọi hiệu ứng chớp khi trúng đòn
-            animator.SetTrigger("TakeDamage");  // Kích hoạt animation trúng đòn
-            Destroy(collision.gameObject);  // Hủy viên đạn
+            collision.gameObject.SetActive(false);
+            objectPool.ReturnObject(collision.gameObject);
 
             if (currentHealth == 0)
             {

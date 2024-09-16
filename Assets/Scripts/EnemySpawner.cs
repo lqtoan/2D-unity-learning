@@ -6,7 +6,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private ObjectPool objectPool;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private float spawnInterval = 5f;
-    [SerializeField] private int maxEnemies = 5; 
+    [SerializeField] private int maxEnemies = 5;
     private int currentEnemyCount = 0;
 
     private float timeSinceLastSpawn;
@@ -31,12 +31,12 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-    if (currentEnemyCount < maxEnemies)
+        if (currentEnemyCount < maxEnemies)
         {
             int randomIndex = Random.Range(0, spawnPoints.Length);
             Transform spawnPoint = spawnPoints[randomIndex];
 
-  // Lấy đối tượng enemy từ pool
+            // Lấy đối tượng enemy từ pool
             GameObject enemy = objectPool.GetObject(enemyPrefab);
             if (enemy != null)
             {
