@@ -64,9 +64,15 @@ public class BossController : EnemyController
 
         if (currentHealth == 0)
         {
+            this.Die();
+
             // Khi boss chết, có thể thêm logic như rơi ra vật phẩm
             DropLoot();
         }
+    }
+
+    protected override void Die() {
+        gameObject.SetActive(false);   
     }
 
     // Phương thức rơi vật phẩm khi boss chết

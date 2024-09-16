@@ -2,13 +2,14 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private ObjectPooler objectPooler;
+    [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private float spawnInterval = 5f;
     [SerializeField] private int maxEnemies = 5; 
     private int currentEnemyCount = 0;
 
     private float timeSinceLastSpawn;
+
 
     private void Update()
     {
@@ -26,6 +27,7 @@ public class EnemySpawner : MonoBehaviour
         currentEnemyCount--;
     }
 
+
     private void SpawnEnemy()
     {
         if (currentEnemyCount < maxEnemies)
@@ -33,11 +35,7 @@ public class EnemySpawner : MonoBehaviour
             int randomIndex = Random.Range(0, spawnPoints.Length);
             Transform spawnPoint = spawnPoints[randomIndex];
 
-            GameObject enemy = objectPooler.GetPooledObject();
-            enemy.transform.position = spawnPoint.position;
-            enemy.transform.rotation = spawnPoint.rotation;
-
-            enemy.SetActive(true);
+            Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
             currentEnemyCount++;
         }
     }

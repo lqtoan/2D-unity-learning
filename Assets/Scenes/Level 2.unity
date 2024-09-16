@@ -2276,7 +2276,7 @@ Transform:
   m_GameObject: {fileID: 1020720955}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.58, y: -2.06, z: 0}
+  m_LocalPosition: {x: 0.62, y: -1.97, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2316,15 +2316,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd88831cf9374f359a7a3f4f826c05e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4
-  jumpForce: 7
-  maxHealth: 10
-  animator: {fileID: 1080028921}
-  healthBar: {fileID: 1722948640}
   groundForwardCheck: {fileID: 1020720956}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
+  speed: 4
+  maxHealth: 10
+  animator: {fileID: 1080028921}
+  healthBar: {fileID: 1722948640}
   enragedThreshold: 0.75
   enragedSpeedMultiplier: 2
   specialAttackPrefab: {fileID: 0}
@@ -2389,15 +2388,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1080028915}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.23, y: 7.08, z: 0}
+  m_LocalRotation: {x: -0.0033296421, y: -0, z: -0, w: 0.9999945}
+  m_LocalPosition: {x: 9.06, y: 7.17, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1020720956}
   - {fileID: 1722948639}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.382, y: 0, z: 0}
 --- !u!50 &1080028919
 Rigidbody2D:
   serializedVersion: 4

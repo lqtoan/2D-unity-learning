@@ -3,21 +3,20 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField] protected float speed = 4f;
-    [SerializeField] protected float jumpForce = 10f;
-    [SerializeField] protected float maxHealth = 2;
-    [SerializeField] protected Animator animator;
-    [SerializeField] protected EnemyHealthBar healthBar;
     [SerializeField] private Transform groundForwardCheck;
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private ObjectPooler objectPooler; // Thêm tham chiếu đến ObjectPooler
-    protected float currentHealth;
-    protected Rigidbody2D rb;
+    [SerializeField] protected float speed = 4f;
+    [SerializeField] protected float maxHealth = 2;
+    [SerializeField] private Animator animator;
+    [SerializeField] private EnemyHealthBar healthBar;
+    private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private bool isFacingRight = true;
     private Color originalColor;
     private readonly Color damageColor = Color.red;
     private readonly float flashDuration = 0.2f;
+    protected float currentHealth;
+    private bool isDead = false;
 
     protected void Start()
     {
@@ -41,11 +40,16 @@ public class EnemyController : MonoBehaviour
 
         originalColor = spriteRenderer.color;
         currentHealth = maxHealth;
-        healthBar?.SetHealth(currentHealth, maxHealth);
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(currentHealth, maxHealth);
+        }
     }
 
     protected void Update()
     {
+        if (isDead) return;
+
         Move();
 
         if (!IsGroundAhead(groundForwardCheck, whatIsGround))
@@ -64,7 +68,7 @@ public class EnemyController : MonoBehaviour
         rb.velocity = new Vector2((isFacingRight ? 1 : -1) * speed, rb.velocity.y);
     }
 
-    protected bool IsGroundAhead(Transform checkPosition, LayerMask groundLayer)
+    private bool IsGroundAhead(Transform checkPosition, LayerMask groundLayer)
     {
         return Physics2D.Raycast(checkPosition.position, Vector2.down, 1f, groundLayer);
     }
@@ -92,13 +96,9 @@ public class EnemyController : MonoBehaviour
             animator.SetTrigger("TakeDamage");  // Kích hoạt animation trúng đòn
             Destroy(collision.gameObject);  // Hủy viên đạn
 
-            if (currentHealth <= 0)
+            if (currentHealth == 0)
             {
-                // Trả đối tượng về pool thay vì hủy
-                gameObject.SetActive(false);
-                objectPooler.ReturnToPool(gameObject);
-
-                FindObjectOfType<EnemySpawner>().DecreaseEnemyCount();
+                Die();  // Gọi hàm Die() khi máu về 0
             }
         }
     }
@@ -117,9 +117,16 @@ public class EnemyController : MonoBehaviour
         SetSpriteColor(originalColor);  // Trả lại màu gốc
     }
 
-    // Hàm thay đổi màu của SpriteRenderer
+    // Pure Function: Hàm thay đổi màu của SpriteRenderer
     private void SetSpriteColor(Color color)
     {
         spriteRenderer.color = color;
+    }
+
+    // Hàm xử lý logic khi kẻ thù chết
+    protected virtual void Die()
+    {
+        isDead = true;  // Đặt trạng thái chết
+        Destroy(gameObject);
     }
 }
