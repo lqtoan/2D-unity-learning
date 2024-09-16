@@ -24,8 +24,8 @@ public class MeleeAttack : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            PlayAttackSound();
             UpdateComboStep();
+            PlayAttackSound();
             TriggerComboAnimation();
         }
 
@@ -34,10 +34,7 @@ public class MeleeAttack : MonoBehaviour
 
     private void PlayAttackSound()
     {
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.swordClip);
-        }
+        AudioManager.Instance?.PlaySFX(AudioManager.Instance.swordClip);
     }
 
     private void UpdateComboStep()

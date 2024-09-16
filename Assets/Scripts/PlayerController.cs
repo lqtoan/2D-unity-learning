@@ -15,13 +15,13 @@ public class PlayerController : MonoBehaviour
     #region Movement Settings
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float dashBoost = 4f;
+    [SerializeField] private float dashBoost = 2f;
     #endregion
 
     [Header("Stamina Settings")]
     [SerializeField] private float maxStamina = 20f;
-    [SerializeField] private float staminaRegenRate = 1f;  // Stamina regenerated per second
-    [SerializeField] private float staminaConsumptionRate = 5f; // Stamina consumed per second while boosting
+    [SerializeField] private float staminaRegenRate = 2f;  // Stamina regenerated per second
+    [SerializeField] private float staminaConsumptionRate = 10f; // Stamina consumed per second while boosting
     [SerializeField] private float minStaminaForBoost = 0.1f; // Minimum stamina required to start boosting
 
     #region Jump Settings
@@ -32,6 +32,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float checkRadius = 0.2f;
     [SerializeField] private float gravityScaleOnFall = 1.5f;
     [SerializeField] private float fallThreshold = -5f;
+    #endregion
+
+    #region Double Tap Settings
+    [Header("Double Tap Settings")]
+    [SerializeField] private float doubleTapThreshold = 0.3f; // Time in seconds to consider a double tap
+    private float lastTapTime = 0f;
+    private bool isBoosting = false;
     #endregion
 
     private Rigidbody2D rb;
@@ -64,11 +71,29 @@ public class PlayerController : MonoBehaviour
 
         if (moveInput != 0)
         {
-            // Check if the player is holding down Left Shift to run
-            if (Input.GetKey(KeyCode.LeftShift) && currentStamina > minStaminaForBoost)
+            // Check for double-tap
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+            {
+                if (Time.time - lastTapTime <= doubleTapThreshold)
+                {
+                    isBoosting = true;
+                }
+                else
+                {
+                    isBoosting = false;
+                }
+                lastTapTime = Time.time;
+            }
+
+            // Apply boost if double-tap detected
+            if (isBoosting && currentStamina > minStaminaForBoost)
             {
                 speed *= dashBoost; // Increase speed to run
                 UseStamina();
+            }
+            else
+            {
+                isBoosting = false; // Reset boosting state if no longer applicable
             }
 
             // Flip the character based on direction
@@ -102,8 +127,8 @@ public class PlayerController : MonoBehaviour
 
     private void RegenerateStamina()
     {
-        // Regenerate stamina only if not boosting
-        if (!Input.GetKey(KeyCode.LeftShift) || rb.velocity.magnitude == 0)
+        // Regenerate stamina
+        if (!isBoosting)
         {
             currentStamina += staminaRegenRate * Time.deltaTime;
             currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina); // Clamp stamina between 0 and max
@@ -170,7 +195,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-        private void UpdateStaminaUI()
+    private void UpdateStaminaUI()
     {
         staminaSlider.value = currentStamina / maxStamina; // Update the slider value based on stamina
     }
