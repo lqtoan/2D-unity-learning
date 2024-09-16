@@ -22,6 +22,5 @@ public class EnemyHealthBar : MonoBehaviour
     public void SetHealth(float health, float maxHealth)
     {
         healthSlider.value = health / maxHealth;
-        Debug.Log(healthSlider.value);
     }
 }

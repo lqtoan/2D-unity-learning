@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class NextLevel : MonoBehaviour
+public class LevelController : MonoBehaviour
 {
     [SerializeField] private int level;
     public void LoadLevel() {
