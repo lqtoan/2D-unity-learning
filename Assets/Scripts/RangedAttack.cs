@@ -13,6 +13,7 @@ public class RangedAttack : MonoBehaviour
 
     private void Awake()
     {
+        // Tìm PlayerController bằng cách tag
         playerController = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerController>();
 
         if (playerController == null)
@@ -23,11 +24,17 @@ public class RangedAttack : MonoBehaviour
 
     private void Start()
     {
+        // Tìm ObjectPool trong scene
         objectPool = FindObjectOfType<ObjectPool>();
+        if (objectPool == null)
+        {
+            Debug.LogError("ObjectPool not found in the scene. Ensure there is an ObjectPool component in the scene.");
+        }
     }
 
     private void Update()
     {
+        // Kiểm tra đầu vào để bắn
         if (Input.GetKeyDown(KeyCode.E) && CanFire())
         {
             Fire();
@@ -36,6 +43,7 @@ public class RangedAttack : MonoBehaviour
 
     private bool CanFire()
     {
+        // Kiểm tra thời gian giữa các lần bắn
         return Time.time >= lastFireTime + fireRate;
     }
 
@@ -43,6 +51,7 @@ public class RangedAttack : MonoBehaviour
     {
         lastFireTime = Time.time;
 
+        // Kích hoạt animation bắn
         playerController?.animator.SetTrigger("RangedAttack");
 
         PlayFireSound();
@@ -51,6 +60,7 @@ public class RangedAttack : MonoBehaviour
 
     private void PlayFireSound()
     {
+        // Chơi âm thanh bắn
         if (AudioManager.Instance != null && AudioManager.Instance.bowClip != null)
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.bowClip);
@@ -70,19 +80,20 @@ public class RangedAttack : MonoBehaviour
 
             if (bullet != null)
             {
-                bool isFacingRight = playerController.isFacingRight; // Kiểm tra hướng của người chơi
+                // Xác định hướng của người chơi
+                bool isFacingRight = playerController.isFacingRight;
                 float direction = isFacingRight ? 1f : -1f;
-                // Đặt vị trí và góc quay cho đạn
+
+                // Đặt vị trí và kích thước cho đạn
                 bullet.transform.position = firePoint.position;
                 bullet.transform.localScale = new Vector2(direction, 1f);
 
-                // Nếu đạn có Rigidbody2D, khởi động lực bắn nếu cần
+                // Điều chỉnh hướng và tốc độ của viên đạn
                 Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
                 BulletController bulletController = bullet.GetComponent<BulletController>();
 
                 if (bulletRb != null && bulletController != null)
                 {
-                    // Điều chỉnh hướng và tốc độ của viên đạn
                     bulletRb.velocity = direction * firePoint.right * bulletController.speed;
                 }
                 else
@@ -100,5 +111,4 @@ public class RangedAttack : MonoBehaviour
             Debug.LogWarning("BulletPrefab or FirePoint is not assigned. Please assign them in the Inspector.");
         }
     }
-
 }
