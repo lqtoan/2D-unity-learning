@@ -602,6 +602,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 820ae0609cf034416982ba50a5b25c35, type: 3}
+--- !u!1 &240741389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 240741391}
+  - component: {fileID: 240741390}
+  m_Layer: 0
+  m_Name: ObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &240741390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240741389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc1f8281543724999ad2e960df7d163e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectPrefab: {fileID: 4954090345058534388, guid: 90e457334269540388c2098cdc9838d4, type: 3}
+  poolSize: 1
+--- !u!4 &240741391
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240741389}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17.028164, y: 7.872875, z: -0.09374954}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &311554854
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,7 +1168,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -30.148058, y: 8.33016, z: -10}
+  m_LocalPosition: {x: 18.88, y: 4.23, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2071,7 +2117,7 @@ Transform:
   m_GameObject: {fileID: 737964141}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -42.82, y: 8.32, z: 0}
+  m_LocalPosition: {x: 18.88, y: 4.23, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2254,7 +2300,7 @@ Transform:
   m_GameObject: {fileID: 920886331}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -42.82, y: 8.32, z: -10}
+  m_LocalPosition: {x: 18.88, y: 4.23, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9341,13 +9387,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2407793504727178499, guid: a74c67d7db884463e889c9af5bb4b273, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2407793504727178499, guid: a74c67d7db884463e889c9af5bb4b273, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4128994413348388335, guid: a74c67d7db884463e889c9af5bb4b273, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.9880943
+      value: -0.04
       objectReference: {fileID: 0}
     - target: {fileID: 4128994413348388335, guid: a74c67d7db884463e889c9af5bb4b273, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.6889925
+      value: 2.97
       objectReference: {fileID: 0}
     - target: {fileID: 4128994413348388335, guid: a74c67d7db884463e889c9af5bb4b273, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9381,6 +9435,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5231553301672281487, guid: a74c67d7db884463e889c9af5bb4b273, type: 3}
+      propertyPath: objectPool
+      value: 
+      objectReference: {fileID: 240741390}
     - target: {fileID: 5231553301672281487, guid: a74c67d7db884463e889c9af5bb4b273, type: 3}
       propertyPath: enemyPrefab
       value: 
@@ -9471,3 +9529,4 @@ SceneRoots:
   - {fileID: 638551826}
   - {fileID: 5139327624729974836}
   - {fileID: 8203476060031691356}
+  - {fileID: 240741391}

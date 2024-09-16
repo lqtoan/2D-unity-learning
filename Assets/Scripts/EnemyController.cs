@@ -17,6 +17,7 @@ public class EnemyController : MonoBehaviour
     private readonly float flashDuration = 0.2f;
     protected float currentHealth;
     private bool isDead = false;
+    private ObjectPool objectPool;
 
     protected void Start()
     {
@@ -40,10 +41,9 @@ public class EnemyController : MonoBehaviour
 
         originalColor = spriteRenderer.color;
         currentHealth = maxHealth;
-        if (healthBar != null)
-        {
-            healthBar.SetHealth(currentHealth, maxHealth);
-        }
+        healthBar?.SetHealth(currentHealth, maxHealth);
+
+        objectPool = FindObjectOfType<ObjectPool>();
     }
 
     protected void Update()
@@ -127,6 +127,22 @@ public class EnemyController : MonoBehaviour
     protected virtual void Die()
     {
         isDead = true;  // Đặt trạng thái chết
-        Destroy(gameObject);
+
+        gameObject.SetActive(false);
+                Reset();
+        objectPool.ReturnObject(gameObject);
+
+        FindObjectOfType<EnemySpawner>().DecreaseEnemyCount();
+    }
+
+    public void Reset()
+    {
+        isDead = false;  
+        currentHealth = maxHealth;  
+        healthBar.SetHealth(currentHealth, maxHealth); 
+        spriteRenderer.color = originalColor;
+        // isFacingRight = true;
+        // transform.localScale = new Vector2(Mathf.Abs(transform.localScale.x), transform.localScale.y);
+        // rb.velocity = Vector2.zero;
     }
 }
