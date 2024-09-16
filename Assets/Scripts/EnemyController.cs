@@ -129,7 +129,7 @@ public class EnemyController : MonoBehaviour
         isDead = true;  // Đặt trạng thái chết
 
         gameObject.SetActive(false);
-                Reset();
+        Reset();
         objectPool.ReturnObject(gameObject);
 
         FindObjectOfType<EnemySpawner>().DecreaseEnemyCount();
@@ -137,9 +137,9 @@ public class EnemyController : MonoBehaviour
 
     public void Reset()
     {
-        isDead = false;  
-        currentHealth = maxHealth;  
-        healthBar.SetHealth(currentHealth, maxHealth); 
+        isDead = false;
+        currentHealth = maxHealth;
+        healthBar.SetHealth(currentHealth, maxHealth);
         spriteRenderer.color = originalColor;
         // isFacingRight = true;
         // transform.localScale = new Vector2(Mathf.Abs(transform.localScale.x), transform.localScale.y);
