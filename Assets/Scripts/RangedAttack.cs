@@ -18,7 +18,7 @@ public class RangedAttack : MonoBehaviour
 
         if (playerController == null)
         {
-            Debug.LogError("PlayerController not found on the Player object. Please ensure the Player object is tagged correctly and has a PlayerController component.");
+            Debug.LogError("PlayerController not found on the Player object. Ensure the Player object is tagged correctly and has a PlayerController component.");
         }
     }
 
@@ -67,7 +67,7 @@ public class RangedAttack : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("AudioManager.Instance or bowClip is missing. Please ensure they are properly assigned.");
+            Debug.LogWarning("AudioManager.Instance or bowClip is missing. Ensure they are properly assigned.");
         }
     }
 
@@ -86,7 +86,6 @@ public class RangedAttack : MonoBehaviour
 
                 // Đặt vị trí và kích thước cho đạn
                 bullet.transform.position = firePoint.position;
-                bullet.transform.localScale = new Vector2(direction, 1f);
 
                 // Điều chỉnh hướng và tốc độ của viên đạn
                 Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
@@ -94,7 +93,11 @@ public class RangedAttack : MonoBehaviour
 
                 if (bulletRb != null && bulletController != null)
                 {
+                    // Đặt hướng và tốc độ cho viên đạn
                     bulletRb.velocity = direction * firePoint.right * bulletController.speed;
+
+                    // Nếu cần, có thể thiết lập góc quay của đạn
+                    bullet.transform.rotation = Quaternion.Euler(0, 0, isFacingRight ? 0 : 180);
                 }
                 else
                 {
