@@ -69,8 +69,6 @@ public class BossController : EnemyController
         {
             Vector2 playerPosition = player.transform.position;
 
-            // TODO: obj pooling
-            // GameObject specialAttack = Instantiate(specialAttackPrefab, transform.position, Quaternion.identity);
             GameObject specialAttack = objectPool.GetObject(specialAttackPrefab);
 
             Rigidbody2D rb = specialAttack.GetComponent<Rigidbody2D>();
