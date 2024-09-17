@@ -140,6 +140,7 @@ public class EnemyController : MonoBehaviour
         isDead = false;
         currentHealth = maxHealth;
         healthBar.SetHealth(currentHealth, maxHealth);
+        healthBar.ResetHeartBar();
         spriteRenderer.color = originalColor;
         // isFacingRight = true;
         // transform.localScale = new Vector2(Mathf.Abs(transform.localScale.x), transform.localScale.y);
