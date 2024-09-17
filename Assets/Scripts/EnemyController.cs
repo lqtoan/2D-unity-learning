@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private bool isFacingRight = true;
     private Color originalColor;
-    private readonly Color damageColor = Color.white;
+    private readonly Color damageColor = Color.red;
     private readonly float flashDuration = 0.2f;
     protected float currentHealth;
     protected bool isDead = false;

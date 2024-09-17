@@ -1171,7 +1171,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.745684, y: 4.49532, z: -10}
+  m_LocalPosition: {x: -33.501755, y: 9.51145, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2120,7 +2120,7 @@ Transform:
   m_GameObject: {fileID: 737964141}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.7, y: 4.5, z: 0}
+  m_LocalPosition: {x: -43.6, y: 9.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2191,8 +2191,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreUI: {fileID: 311554856}
+  hpBar: {fileID: 0}
   animator: {fileID: 737964147}
-  hp: 3
+  maxHp: 3
+  currentHp: 0
 --- !u!114 &737964149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2303,7 +2305,7 @@ Transform:
   m_GameObject: {fileID: 920886331}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.7, y: 4.5, z: -10}
+  m_LocalPosition: {x: -43.6, y: 9.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2362,6 +2364,7 @@ MonoBehaviour:
   runClip: {fileID: 8300000, guid: c35ce239f943446699dbfcbdf2abf05b, type: 3}
   swordClip: {fileID: 8300000, guid: 292df2214c7124ccba8f3d163af91720, type: 3}
   bowClip: {fileID: 8300000, guid: 27da4a442bff046dba8473c4a6dd2ae5, type: 3}
+  hurtClip: {fileID: 0}
 --- !u!4 &925261721
 Transform:
   m_ObjectHideFlags: 0

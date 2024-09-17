@@ -23,6 +23,12 @@ public class PlayerCollisionHandling : MonoBehaviour
         this.scoreUI.SetText(this.score.ToString());
         this.hpBar.value = maxHp;
         currentHp = maxHp;
+
+        if (hpBar == null)
+        {
+            // Tìm Slider từ Canvas
+            hpBar = GameObject.Find("HP").GetComponent<Slider>();
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

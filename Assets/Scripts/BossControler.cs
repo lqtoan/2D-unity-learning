@@ -40,11 +40,6 @@ public class BossController : EnemyController
         {
             StartCoroutine(SpecialAttack());
         }
-
-        if (base.isDead)
-        {
-            objectPool.ReturnObject(specialAttackPrefab);
-        }
     }
 
     private void EnterEnragedState()

@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float staminaRegenRate = 2f;  // Stamina regenerated per second
     [SerializeField] private float staminaConsumptionRate = 10f; // Stamina consumed per second while boosting
     [SerializeField] private float minStaminaForBoost = 0.1f; // Minimum stamina required to start boosting
+    private TrailRenderer trailRenderer;
 
     #region Jump Settings
     [Header("Jump Settings")]
@@ -51,6 +52,13 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         currentStamina = maxStamina; // Initialize stamina
+        trailRenderer = GetComponent<TrailRenderer>();
+
+        if (staminaSlider == null)
+        {
+            // Tìm Slider từ Canvas
+            staminaSlider = GameObject.Find("Stamia").GetComponent<Slider>();
+        }
     }
 
     private void Update()
@@ -77,10 +85,12 @@ public class PlayerController : MonoBehaviour
                 if (Time.time - lastTapTime <= doubleTapThreshold)
                 {
                     isBoosting = true;
+                    if (trailRenderer != null) trailRenderer.emitting = true;
                 }
                 else
                 {
                     isBoosting = false;
+                    if (trailRenderer != null) trailRenderer.emitting = false;
                 }
                 lastTapTime = Time.time;
             }
@@ -116,7 +126,7 @@ public class PlayerController : MonoBehaviour
     private void Flip()
     {
         isFacingRight = !isFacingRight;
-        transform.localScale = new Vector2(- transform.localScale.x, transform.localScale.y);
+        transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
     }
 
     private void UseStamina()
