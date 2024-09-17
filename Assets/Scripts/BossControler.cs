@@ -7,6 +7,7 @@ public class BossController : EnemyController
     [SerializeField] private float enragedSpeedMultiplier = 2f;
     [SerializeField] private GameObject specialAttackPrefab;
     [SerializeField] private float specialAttackCooldown = 1f;
+    [SerializeField] private ObjectPool objectPool;
 
     private bool isEnraged = false;
     private bool canUseSpecialAttack = true;
@@ -39,6 +40,11 @@ public class BossController : EnemyController
         {
             StartCoroutine(SpecialAttack());
         }
+
+        if (base.isDead)
+        {
+            objectPool.ReturnObject(specialAttackPrefab);
+        }
     }
 
     private void EnterEnragedState()
@@ -64,17 +70,21 @@ public class BossController : EnemyController
             Vector2 playerPosition = player.transform.position;
 
             // TODO: obj pooling
-            GameObject specialAttack = Instantiate(specialAttackPrefab, transform.position, Quaternion.identity);
+            // GameObject specialAttack = Instantiate(specialAttackPrefab, transform.position, Quaternion.identity);
+            GameObject specialAttack = objectPool.GetObject(specialAttackPrefab);
 
             Rigidbody2D rb = specialAttack.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
+                specialAttack.transform.position = transform.position;
+                specialAttack.transform.rotation = Quaternion.identity;
+
                 Vector2 direction = (playerPosition - (Vector2)transform.position).normalized;
                 rb.velocity = direction * 5f; // Tốc độ đạn có thể tùy chỉnh
             }
 
-            // TODO: obj pooling
-            Destroy(specialAttack, 2f);
+            yield return new WaitForSeconds(2f);
+            objectPool.ReturnObject(specialAttack);
         }
 
         yield return new WaitForSeconds(specialAttackCooldown);

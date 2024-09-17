@@ -1,8 +1,10 @@
+using System.Collections;
 using UnityEngine;
 
 public class EnemyBulletController : MonoBehaviour
 {
     public float damage = 1f;
+    private ObjectPool objectPool;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -13,15 +15,24 @@ public class EnemyBulletController : MonoBehaviour
             {
                 player.TakeDamage(damage);
 
-                // TODO: obj pooling
-                Destroy(gameObject);
+                // objectPool.ReturnObject(gameObject);
+                gameObject.SetActive(false);
+            } 
+            else
+            {
+                Debug.LogError("PlayerCollisionHandling component not found on the object with tag ");
             }
         }
     }
 
     private void Start()
     {
-        // TODO: obj pooling
-        // Destroy(gameObject, 2f);
+        DestroyEnemyBullet();
+    }
+
+    private IEnumerator DestroyEnemyBullet()
+    {
+        yield return new WaitForSeconds(2f);
+        objectPool.ReturnObject(gameObject);
     }
 }
