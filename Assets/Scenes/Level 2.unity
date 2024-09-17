@@ -7282,6 +7282,14 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 1080028921}
+    - target: {fileID: 4135793431648061466, guid: e24ec974c1ea64951a70311151172296, type: 3}
+      propertyPath: specialAttackPrefab
+      value: 
+      objectReference: {fileID: 7643834706267086282, guid: 414717cb8c46641049c7dd008dcb7d89, type: 3}
+    - target: {fileID: 4135793431648061466, guid: e24ec974c1ea64951a70311151172296, type: 3}
+      propertyPath: specialAttackCooldown
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7725824970151119088, guid: e24ec974c1ea64951a70311151172296, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

@@ -17,12 +17,12 @@ public class EnemyHealthBar : MonoBehaviour
 
     void Start()
     {
-        enemyTransform = transform.parent; // Giả định thanh máu là con của Enemy
+        enemyTransform = transform.parent;
 
         if (healthSlider == null)
         {
             Debug.LogError("HealthSlider is not assigned in the inspector. Please assign it.");
-            return; // Dừng thực thi nếu healthSlider không được gán
+            return;
         }
 
         ResetHeartBar();
@@ -35,35 +35,30 @@ public class EnemyHealthBar : MonoBehaviour
 
     }
 
-    // Cập nhật thanh máu khi kẻ thù bị tấn công
     public void SetHealth(float health, float maxHealth)
     {
         if (gameObject.activeInHierarchy)
         {
             float healthPercent = health / maxHealth;
-            Debug.Log(healthPercent);
-            // Cập nhật ngay lập tức thanh máu hiện tại
             healthSlider.value = healthPercent;
 
             // Cập nhật màu sắc cho thanh máu hiện tại
             // UpdateHealthBarColor(healthPercent);
 
-            // Thanh máu đã mất giảm sau transitionDuration
             StartCoroutine(UpdateLostHealth(lostHealthSlider.value, healthPercent));
         }
     }
 
-    public void ResetHeartBar() {
-        // Cập nhật thanh máu khi bắt đầu
+    public void ResetHeartBar()
+    {
         healthSlider.value = healthSlider.maxValue;
         lostHealthSlider.value = lostHealthSlider.maxValue;
     }
 
-    // Coroutine cập nhật thanh máu đã mất
     private IEnumerator UpdateLostHealth(float startValue, float endValue)
     {
         float elapsedTime = 0f;
-        float transitionDuration = 0.2f; 
+        float transitionDuration = 0.2f;
         startValue = lostHealthSlider.value;
 
         while (elapsedTime < transitionDuration)
@@ -74,7 +69,6 @@ public class EnemyHealthBar : MonoBehaviour
             yield return null;
         }
 
-        // Đảm bảo giá trị cuối cùng là đúng
         lostHealthSlider.value = endValue;
     }
 

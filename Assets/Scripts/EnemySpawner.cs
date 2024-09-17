@@ -36,15 +36,12 @@ public class EnemySpawner : MonoBehaviour
             int randomIndex = Random.Range(0, spawnPoints.Length);
             Transform spawnPoint = spawnPoints[randomIndex];
 
-            // Lấy đối tượng enemy từ pool
             GameObject enemy = objectPool.GetObject(enemyPrefab);
             if (enemy != null)
             {
-                // Đặt vị trí và góc quay cho đối tượng
                 enemy.transform.position = spawnPoint.position;
                 enemy.transform.rotation = spawnPoint.rotation;
 
-                // Tăng số lượng kẻ thù hiện tại
                 currentEnemyCount++;
             }
             else

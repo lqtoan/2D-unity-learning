@@ -7,7 +7,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] protected float speed = 4f;
     [SerializeField] protected float maxHealth = 2;
-    [SerializeField] private Animator animator;
+    [SerializeField] protected Animator animator;
     [SerializeField] private EnemyHealthBar healthBar;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;

@@ -3,82 +3,105 @@ using UnityEngine;
 
 public class BossController : EnemyController
 {
-    [SerializeField] private float enragedThreshold = 0.75f; // Boss sẽ chuyển sang trạng thái tức giận khi máu dưới 50%
-    [SerializeField] private float enragedSpeedMultiplier = 2f; // Tốc độ của Boss khi ở trạng thái tức giận
-    [SerializeField] private GameObject specialAttackPrefab; // Prefab cho đòn tấn công đặc biệt của boss
-    [SerializeField] private float specialAttackCooldown = 5f; // Thời gian giữa các lần sử dụng đòn tấn công đặc biệt
+    [SerializeField] private float enragedThreshold = 0.75f;
+    [SerializeField] private float enragedSpeedMultiplier = 2f;
+    [SerializeField] private GameObject specialAttackPrefab;
+    [SerializeField] private float specialAttackCooldown = 1f;
+
     private bool isEnraged = false;
     private bool canUseSpecialAttack = true;
 
-    // Gọi hàm base Start() từ EnemyController và thêm logic cho Boss
     private new void Start()
     {
         base.Start();
 
-        if (specialAttackPrefab == null) return;
+        if (specialAttackPrefab == null)
+        {
+            Debug.LogWarning("SpecialAttackPrefab is not assigned.");
+        }
     }
 
     private new void Update()
     {
         base.Update();
 
-        // Kiểm tra nếu Boss chuyển sang trạng thái tức giận
         if (!isEnraged && currentHealth < maxHealth * enragedThreshold)
         {
             EnterEnragedState();
         }
 
-        // Thực hiện tấn công đặc biệt nếu có thể
+        if (!isEnraged && currentHealth < maxHealth * enragedThreshold)
+        {
+            EnterEnragedState();
+        }
+
+        if (isEnraged && canUseSpecialAttack && specialAttackPrefab != null)
+        {
+            StartCoroutine(SpecialAttack());
+        }
+    }
+
+    private void EnterEnragedState()
+    {
+        isEnraged = true;
+        speed *= enragedSpeedMultiplier;
+        base.animator.SetTrigger("Summon");
+
         if (canUseSpecialAttack)
         {
             StartCoroutine(SpecialAttack());
         }
     }
 
-    // Thêm trạng thái tức giận cho boss
-    private void EnterEnragedState()
-    {
-        isEnraged = true;
-        speed *= enragedSpeedMultiplier; // Tăng tốc độ
-        Debug.Log("Boss is enraged! Increased speed!");
-        // animator.SetTrigger("Enraged"); // Kích hoạt animation tức giận (nếu có)
-    }
-
-    // Tạo đòn tấn công đặc biệt
     private IEnumerator SpecialAttack()
     {
         canUseSpecialAttack = false;
 
-        // Tạo đòn tấn công tại vị trí của boss
-        if (specialAttackPrefab) Instantiate(specialAttackPrefab, transform.position, Quaternion.identity);
-        // animator.SetTrigger("SpecialAttack"); // Kích hoạt animation đòn tấn công đặc biệt
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-        yield return new WaitForSeconds(specialAttackCooldown); // Chờ thời gian hồi chiêu
-        canUseSpecialAttack = true; // Cho phép sử dụng lại đòn tấn công đặc biệt
+        if (player != null)
+        {
+            Vector2 playerPosition = player.transform.position;
+
+            // TODO: obj pooling
+            GameObject specialAttack = Instantiate(specialAttackPrefab, transform.position, Quaternion.identity);
+
+            Rigidbody2D rb = specialAttack.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                Vector2 direction = (playerPosition - (Vector2)transform.position).normalized;
+                rb.velocity = direction * 5f; // Tốc độ đạn có thể tùy chỉnh
+            }
+
+            // TODO: obj pooling
+            Destroy(specialAttack, 2f);
+        }
+
+        yield return new WaitForSeconds(specialAttackCooldown);
+
+        canUseSpecialAttack = true;
     }
 
-    // Ghi đè phương thức OnTriggerEnter2D để xử lý khi boss nhận sát thương
+
     protected new void OnTriggerEnter2D(Collider2D collision)
     {
-        base.OnTriggerEnter2D(collision); // Gọi hàm xử lý cơ bản từ EnemyController
+        base.OnTriggerEnter2D(collision);
 
         if (currentHealth == 0)
         {
-            this.Die();
-
-            // Khi boss chết, có thể thêm logic như rơi ra vật phẩm
+            Die();
             DropLoot();
         }
     }
 
-    protected override void Die() {
-        gameObject.SetActive(false);   
+    protected override void Die()
+    {
+        StopAllCoroutines();
+        gameObject.SetActive(false);
     }
 
-    // Phương thức rơi vật phẩm khi boss chết
     private void DropLoot()
     {
         Debug.Log("Boss has been defeated! Dropping loot.");
-        // Logic để rơi ra vật phẩm (nếu có)
     }
 }
