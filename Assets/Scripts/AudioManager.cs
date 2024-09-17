@@ -11,6 +11,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip runClip;
     public AudioClip swordClip;
     public AudioClip bowClip;
+    public AudioClip hurtClip;
 
     private void Awake()
     {

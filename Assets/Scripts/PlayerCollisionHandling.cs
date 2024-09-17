@@ -9,7 +9,8 @@ public class PlayerCollisionHandling : MonoBehaviour
     public Slider hpBar;
     public Animator animator;
     private int score = 0;
-    [SerializeField] private float hp = 3f;
+    [SerializeField] private float maxHp = 3f;
+    [SerializeField] private float currentHp;
 
     private void Awake()
     {
@@ -20,7 +21,8 @@ public class PlayerCollisionHandling : MonoBehaviour
 
     {
         this.scoreUI.SetText(this.score.ToString());
-        this.hpBar.value = 3f;
+        this.hpBar.value = maxHp;
+        currentHp = maxHp;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -39,18 +41,17 @@ public class PlayerCollisionHandling : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        hp -= damage;
+        currentHp -= damage;
 
-        hpBar.value = hp / 3f; // Giả sử max HP là 3
+        hpBar.value = currentHp / maxHp; // Giả sử max HP là 3
 
-        // Kích hoạt animation Hurt
         this.animator.SetTrigger("Hurt");
 
 
-        // AudioManager.Instance.PlaySFX(AudioManager.Instance.hurtClip);
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.hurtClip);
 
 
-        if (hp <= 0)
+        if (currentHp <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
