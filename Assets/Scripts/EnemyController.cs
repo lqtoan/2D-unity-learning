@@ -12,9 +12,9 @@ public class EnemyController : MonoBehaviour
     protected float currentHealth;
     protected bool isDead = false;
     protected ObjectPool objectPool;
-    private Rigidbody2D rb;
+    protected Rigidbody2D rb;
+    protected bool isFacingRight = true;
     private SpriteRenderer spriteRenderer;
-    private bool isFacingRight = true;
     private Color originalColor;
     private readonly Color damageColor = Color.red;
     private readonly float flashDuration = 0.2f;
@@ -51,7 +51,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void Move()
+    protected virtual void Move()
     {
         rb.velocity = new Vector2((isFacingRight ? 1 : -1) * speed, rb.velocity.y);
     }
@@ -66,7 +66,7 @@ public class EnemyController : MonoBehaviour
         return Physics2D.Raycast(checkPosition.position, facingRight ? Vector2.right : Vector2.left, 0.2f, groundLayer);
     }
 
-    private void FlipDirection()
+    protected void FlipDirection()
     {
         isFacingRight = !isFacingRight;
         transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
