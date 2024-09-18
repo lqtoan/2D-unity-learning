@@ -44,10 +44,6 @@ public class EnemySpawner : MonoBehaviour
 
                 currentEnemyCount++;
             }
-            else
-            {
-                Debug.LogError("Failed to get enemy from pool.");
-            }
         }
     }
 }

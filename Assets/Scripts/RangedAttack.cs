@@ -15,21 +15,12 @@ public class RangedAttack : MonoBehaviour
     {
         // Tìm PlayerController bằng cách tag
         playerController = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerController>();
-
-        if (playerController == null)
-        {
-            Debug.LogError("PlayerController not found on the Player object. Ensure the Player object is tagged correctly and has a PlayerController component.");
-        }
     }
 
     private void Start()
     {
         // Tìm ObjectPool trong scene
         objectPool = FindObjectOfType<ObjectPool>();
-        if (objectPool == null)
-        {
-            Debug.LogError("ObjectPool not found in the scene. Ensure there is an ObjectPool component in the scene.");
-        }
     }
 
     private void Update()
@@ -65,10 +56,6 @@ public class RangedAttack : MonoBehaviour
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.bowClip);
         }
-        else
-        {
-            Debug.LogWarning("AudioManager.Instance or bowClip is missing. Ensure they are properly assigned.");
-        }
     }
 
     private void SpawnBullet()
@@ -99,19 +86,7 @@ public class RangedAttack : MonoBehaviour
                     // Nếu cần, có thể thiết lập góc quay của đạn
                     bullet.transform.rotation = Quaternion.Euler(0, 0, isFacingRight ? 0 : 180);
                 }
-                else
-                {
-                    Debug.LogError("BulletController or Rigidbody2D is missing on the bullet prefab.");
-                }
             }
-            else
-            {
-                Debug.LogError("Failed to retrieve bullet from object pool.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("BulletPrefab or FirePoint is not assigned. Please assign them in the Inspector.");
         }
     }
 }

@@ -7,7 +7,6 @@ public class BossController : EnemyController
     [SerializeField] private float enragedSpeedMultiplier = 2f;
     [SerializeField] private GameObject specialAttackPrefab;
     [SerializeField] private float specialAttackCooldown = 1f;
-    [SerializeField] private ObjectPool objectPool;
 
     private bool isEnraged = false;
     private bool canUseSpecialAttack = true;
@@ -15,11 +14,6 @@ public class BossController : EnemyController
     private new void Start()
     {
         base.Start();
-
-        if (specialAttackPrefab == null)
-        {
-            Debug.LogWarning("SpecialAttackPrefab is not assigned.");
-        }
     }
 
     private new void Update()
@@ -64,7 +58,7 @@ public class BossController : EnemyController
         {
             Vector2 playerPosition = player.transform.position;
 
-            GameObject specialAttack = objectPool.GetObject(specialAttackPrefab);
+            GameObject specialAttack = base.objectPool.GetObject(specialAttackPrefab);
 
             Rigidbody2D rb = specialAttack.GetComponent<Rigidbody2D>();
             if (rb != null)
@@ -77,7 +71,7 @@ public class BossController : EnemyController
             }
 
             yield return new WaitForSeconds(2f);
-            objectPool.ReturnObject(specialAttack);
+            base.objectPool.ReturnObject(specialAttack);
         }
 
         yield return new WaitForSeconds(specialAttackCooldown);
@@ -105,6 +99,8 @@ public class BossController : EnemyController
 
     private void DropLoot()
     {
+        #if UNITY_EDITOR
         Debug.Log("Boss has been defeated! Dropping loot.");
+        #endif
     }
 }

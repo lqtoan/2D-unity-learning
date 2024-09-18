@@ -23,10 +23,6 @@ public class EnemyBulletController : MonoBehaviour
 
                 objectPool.ReturnObject(gameObject);
             } 
-            else
-            {
-                Debug.LogError("PlayerCollisionHandling component not found on the object with tag ");
-            }
         }
     }
 

@@ -3,41 +3,29 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField] private Transform groundForwardCheck;
-    [SerializeField] private LayerMask whatIsGround;
     [SerializeField] protected float speed = 4f;
     [SerializeField] protected float maxHealth = 2;
     [SerializeField] protected Animator animator;
+    [SerializeField] private Transform groundForwardCheck;
+    [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private EnemyHealthBar healthBar;
+    protected float currentHealth;
+    protected bool isDead = false;
+    protected ObjectPool objectPool;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private bool isFacingRight = true;
     private Color originalColor;
     private readonly Color damageColor = Color.red;
     private readonly float flashDuration = 0.2f;
-    protected float currentHealth;
-    protected bool isDead = false;
-    private ObjectPool objectPool;
 
     protected void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        if (rb == null)
-        {
-            Debug.LogError("Rigidbody2D not found on the enemy object!");
-        }
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null)
-        {
-            Debug.LogError("SpriteRenderer not found on the enemy object!");
-        }
 
         healthBar = GetComponent<EnemyHealthBar>();
-        if (healthBar == null)
-        {
-            Debug.LogError("EnemyHealthBar not found! Make sure it's attached to the enemy.");
-        }
 
         originalColor = spriteRenderer.color;
         currentHealth = maxHealth;
@@ -98,35 +86,31 @@ public class EnemyController : MonoBehaviour
 
             if (currentHealth == 0)
             {
-                Die();  // Gọi hàm Die() khi máu về 0
+                Die();
             }
         }
     }
 
     private float CalculateHealth(float currentHealth, float damage)
     {
-        return Mathf.Max(currentHealth - damage, 0);  // Đảm bảo không âm
+        return Mathf.Max(currentHealth - damage, 0);
     }
 
     private IEnumerator FlashDamageEffect()
     {
-        SetSpriteColor(damageColor);  // Thay đổi màu sang màu trúng đòn
-
+        SetSpriteColor(damageColor);  
         yield return new WaitForSeconds(flashDuration);
 
-        SetSpriteColor(originalColor);  // Trả lại màu gốc
+        SetSpriteColor(originalColor);
     }
 
-    // Pure Function: Hàm thay đổi màu của SpriteRenderer
     private void SetSpriteColor(Color color)
     {
         spriteRenderer.color = color;
     }
-
-    // Hàm xử lý logic khi kẻ thù chết
     protected virtual void Die()
     {
-        isDead = true;  // Đặt trạng thái chết
+        isDead = true;
 
         gameObject.SetActive(false);
         Reset();

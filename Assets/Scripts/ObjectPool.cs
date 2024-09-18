@@ -52,7 +52,6 @@ public class ObjectPool : MonoBehaviour
             return newObj;
         }
 
-        Debug.LogError($"Prefab {prefab.name} không có trong pool.");
         return null;
     }
 
@@ -61,7 +60,6 @@ public class ObjectPool : MonoBehaviour
     {
         if (obj == null)
         {
-            Debug.LogError("Attempted to return a null object to the pool.");
             return;
         }
 
@@ -76,7 +74,5 @@ public class ObjectPool : MonoBehaviour
                 return;
             }
         }
-
-        Debug.LogError("Không tìm thấy pool phù hợp để trả đối tượng.");
     }
 }

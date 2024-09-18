@@ -19,12 +19,6 @@ public class EnemyHealthBar : MonoBehaviour
     {
         enemyTransform = transform.parent;
 
-        if (healthSlider == null)
-        {
-            Debug.LogError("HealthSlider is not assigned in the inspector. Please assign it.");
-            return;
-        }
-
         ResetHeartBar();
     }
 
