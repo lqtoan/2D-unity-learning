@@ -5,7 +5,7 @@ using UnityEngine;
 public class BossController : EnemyController
 {
     [SerializeField] private float enragedThreshold = 0.75f;
-    [SerializeField] private float enragedSpeedMultiplier = 2f;
+    [SerializeField] private float enragedSpeedMultiplier = 1.5f;
     [SerializeField] private GameObject specialAttackPrefab;
     [SerializeField] private float specialAttackCooldown = 1f;
 
@@ -39,7 +39,6 @@ public class BossController : EnemyController
 
     private new void Move()
     {
-        Debug.Log(base.isFacingRight);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
